@@ -15,13 +15,14 @@ def extract_face_landmarks(
     refine_landmarks=True,
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5,
-    device_index=0,
+    device_index=10,
+    duration=120,
     pickle_file="keypoints.pickle",
 ):
 
     drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
     # drawing_spec = None
-    cap = cv2.VideoCapture(device_index)
+    cap = cv2.VideoCapture('/dev/video2')
     with mp_face_mesh.FaceMesh(
         max_num_faces=max_num_faces,
         refine_landmarks=refine_landmarks,
@@ -31,7 +32,7 @@ def extract_face_landmarks(
         keypoints = []
         start = time.time()
         while cap.isOpened():
-            if time.time() - start > 120:
+            if time.time() - start > duration:
                 break
             success, image = cap.read()
             if not success:
@@ -89,4 +90,4 @@ def extract_face_landmarks(
         pickle.dump(keypoints, fp)
 
 
-extract_face_landmarks(device_index=0, pickle_file='looking_speaking.pickle')
+extract_face_landmarks(device_index=0, pickle_file='experiment_data/not_facing_speaking_2.pickle')
